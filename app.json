@@ -1,0 +1,42 @@
+{
+  "expo": {
+    "name": "Stock Sync",
+    "slug": "stock-sync-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "icon": "./assets/logo-fondo.png",
+    "splash": {
+      "image": "./assets/logo-fondo.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.stocksync.mobile"
+    },
+    "android": {
+      "package": "com.stocksync.mobile",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/logo-fondo.png",
+        "backgroundColor": "#ffffff"
+      },
+      "permissions": [
+        "INTERNET",
+        "ACCESS_NETWORK_STATE"
+      ]
+    },
+    "plugins": [
+      "expo-secure-store"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "12e08dde-5f95-4c4e-8d8b-10b78b6e81a4"
+      }
+    }
+  }
+}

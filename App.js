@@ -1,0 +1,202 @@
+// App.js
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, View, StatusBar, ImageBackground } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import LoginView from './src/components/LoginView';
+import RegisterView from './src/components/RegisterView';
+import PublicCatalogView from './src/components/PublicCatalogView';
+import ClientView from './src/components/ClientView';
+import AdminView from './src/components/AdminView';
+import { productService } from './src/services/productService';
+import { providerService } from './src/services/providerService';
+import { categoryService } from './src/services/categoryService';
+import { initialProductos, initialProveedores, initialCategorias } from './src/data/initialData';
+import { useRealtimeSync } from './src/hooks/useRealtimeSync';
+import logoFondo from './assets/logo-fondo.png';
+
+export default function App() {
+  const [productos, setProductos] = useState([]);
+  const [proveedores, setProveedores] = useState([]);
+  const [categorias, setCategorias] = useState([]);
+  const [carrito, setCarrito] = useState([]);
+  const [vistaActual, setVistaActual] = useState('login');
+
+  // Realtime sync
+  useRealtimeSync(setProductos, setProveedores);
+
+  // Restaurar sesión desde AsyncStorage al iniciar la app
+  useEffect(() => {
+    const loadSession = async () => {
+      try {
+        const storedSession = await AsyncStorage.getItem('userSession');
+        if (storedSession) {
+          const usr = JSON.parse(storedSession);
+          setVistaActual(usr.role === 'administrador' ? 'admin' : 'client');
+        }
+      } catch (err) {
+        console.error('Error loading session:', err);
+      }
+    };
+    loadSession();
+  }, []);
+
+  const recargarProductos = async () => {
+    const data = await productService.getAll();
+    setProductos(data);
+  };
+
+  // Cargar datos iniciales
+  useEffect(() => {
+    const cargarDatos = async () => {
+      try {
+        const [productosDB, proveedoresDB, categoriasDB] = await Promise.all([
+          productService.getAll(),
+          providerService.getAll(),
+          categoryService.getAll()
+        ]);
+
+        setProductos(productosDB.length > 0 ? productosDB : initialProductos);
+        setProveedores(proveedoresDB.length > 0 ? proveedoresDB : initialProveedores);
+        setCategorias(categoriasDB.length > 0 ? categoriasDB : initialCategorias);
+      } catch (error) {
+        console.error('Error al cargar datos:', error);
+        setProductos(initialProductos);
+        setProveedores(initialProveedores);
+        setCategorias(initialCategorias);
+      }
+    };
+    cargarDatos();
+  }, []);
+
+  const handleLogin = async (usr) => {
+    if (!usr) {
+      alert('Usuario/clave inválidos');
+      return;
+    }
+    try {
+      await AsyncStorage.setItem('userSession', JSON.stringify(usr));
+      setVistaActual(usr.role === 'administrador' ? 'admin' : 'client');
+    } catch (err) {
+      console.error('No se pudo guardar la sesión:', err);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await AsyncStorage.removeItem('userSession');
+      setVistaActual('login');
+    } catch (err) {
+      console.error('No se pudo eliminar userSession:', err);
+    }
+  };
+
+  const handleShowCatalog = () => setVistaActual('catalog');
+  const handleShowRegister = () => setVistaActual('register');
+  const handleShowLogin = () => setVistaActual('login');
+
+  const handleAddProducto = async (nuevoProducto) => {
+    try {
+      await productService.create(nuevoProducto);
+      await recargarProductos();
+    } catch (error) {
+      console.error('Error al agregar producto:', error);
+    }
+  };
+
+  const handleAddProveedor = async (nuevoProveedor) => {
+    try {
+      await providerService.create(nuevoProveedor);
+      const provs = await providerService.getAll();
+      setProveedores(provs);
+    } catch (error) {
+      console.error('Error al agregar proveedor:', error);
+    }
+  };
+
+  const handleAddCategoria = async (nombreCategoria) => {
+    try {
+      await categoryService.create(nombreCategoria);
+      const cats = await categoryService.getAll();
+      setCategorias(cats);
+    } catch (error) {
+      console.error('Error al agregar categoría:', error);
+    }
+  };
+
+  const renderView = () => {
+    switch (vistaActual) {
+      case 'login':
+        return (
+          <LoginView
+            onLogin={handleLogin}
+            onShowRegister={handleShowRegister}
+            onShowCatalog={handleShowCatalog}
+          />
+        );
+      case 'register':
+        return <RegisterView onShowLogin={handleShowLogin} />;
+      case 'catalog':
+        return (
+          <PublicCatalogView
+            productos={productos}
+            categorias={categorias}
+            onBack={handleShowLogin}
+          />
+        );
+      case 'client':
+        return (
+          <ClientView
+            productos={productos}
+            categorias={categorias}
+            carrito={carrito}
+            setCarrito={setCarrito}
+            onLogout={handleLogout}
+          />
+        );
+      case 'admin':
+        return (
+          <AdminView
+            productos={productos}
+            proveedores={proveedores}
+            categorias={categorias}
+            onAddProducto={handleAddProducto}
+            onAddProveedor={handleAddProveedor}
+            onAddCategoria={handleAddCategoria}
+            onLogout={handleLogout}
+            recargarProductos={recargarProductos}
+          />
+        );
+      default:
+        return (
+          <LoginView
+            onLogin={handleLogin}
+            onShowRegister={handleShowRegister}
+            onShowCatalog={handleShowCatalog}
+          />
+        );
+    }
+  };
+
+  return (
+    <ImageBackground
+      source={logoFondo}
+      style={styles.backgroundImage}
+      resizeMode="cover"
+    >
+      <View style={styles.overlay}>
+      <StatusBar barStyle="dark-content" />
+      {renderView()}
+      </View>
+    </ImageBackground>
+  );
+}
+
+const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+  },
+  overlay: {
+    flex: 1,
+    backgroundColor: 'rgba(244, 247, 250, 0.85)',
+  },
+});
