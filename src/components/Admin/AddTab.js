@@ -114,6 +114,7 @@ const AddTab = ({
         <TextInput
           style={styles.input}
           placeholder="ID del producto"
+          placeholderTextColor="#666666"
           value={nuevoProducto.id}
           onChangeText={(text) => handleProductoChange('id', text)}
         />
@@ -121,6 +122,7 @@ const AddTab = ({
         <TextInput
           style={styles.input}
           placeholder="Nombre del producto"
+          placeholderTextColor="#666666"
           value={nuevoProducto.nombre}
           onChangeText={(text) => handleProductoChange('nombre', text)}
         />
@@ -128,6 +130,7 @@ const AddTab = ({
         <TextInput
           style={styles.input}
           placeholder="Categoría"
+          placeholderTextColor="#666666"
           value={nuevoProducto.categoria}
           onChangeText={(text) => handleProductoChange('categoria', text)}
         />
@@ -135,6 +138,7 @@ const AddTab = ({
         <TextInput
           style={styles.input}
           placeholder="Cantidad"
+          placeholderTextColor="#666666"
           value={nuevoProducto.cantidad.toString()}
           onChangeText={(text) => handleProductoChange('cantidad', text)}
           keyboardType="numeric"
@@ -143,6 +147,7 @@ const AddTab = ({
         <TextInput
           style={styles.input}
           placeholder="Precio"
+          placeholderTextColor="#666666"
           value={nuevoProducto.precio.toString()}
           onChangeText={(text) => handleProductoChange('precio', text)}
           keyboardType="numeric"
@@ -160,6 +165,7 @@ const AddTab = ({
         <TextInput
           style={styles.input}
           placeholder="Nombre de la categoría"
+          placeholderTextColor="#666666"
           value={nuevaCategoria}
           onChangeText={setNuevaCategoria}
         />
@@ -176,6 +182,7 @@ const AddTab = ({
         <TextInput
           style={styles.input}
           placeholder="Nombre del proveedor"
+          placeholderTextColor="#666666"
           value={nuevoProveedor.nombre}
           onChangeText={(text) => handleProveedorChange('nombre', text)}
         />
@@ -183,6 +190,7 @@ const AddTab = ({
         <TextInput
           style={styles.input}
           placeholder="Email"
+          placeholderTextColor="#666666"
           value={nuevoProveedor.email}
           onChangeText={(text) => handleProveedorChange('email', text)}
           keyboardType="email-address"
@@ -192,6 +200,7 @@ const AddTab = ({
         <TextInput
           style={styles.input}
           placeholder="Teléfono"
+          placeholderTextColor="#666666"
           value={nuevoProveedor.telefono}
           onChangeText={(text) => handleProveedorChange('telefono', text)}
           keyboardType="phone-pad"
@@ -234,6 +243,8 @@ const styles = StyleSheet.create({
     padding: 12,
     marginBottom: 12,
     fontSize: 16,
+    backgroundColor: '#ffffff',
+    color: '#000000',
   },
   button: {
     backgroundColor: '#28a745',

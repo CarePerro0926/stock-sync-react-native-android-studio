@@ -30,9 +30,7 @@
         "ACCESS_NETWORK_STATE"
       ]
     },
-    "plugins": [
-      "expo-secure-store"
-    ],
+    "plugins": [],
     "extra": {
       "eas": {
         "projectId": "12e08dde-5f95-4c4e-8d8b-10b78b6e81a4"

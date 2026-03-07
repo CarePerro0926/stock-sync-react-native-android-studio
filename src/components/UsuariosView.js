@@ -183,7 +183,7 @@ const UsuariosView = () => {
         placeholder="Buscar por nombre, correo, usuario o cédula..."
         value={busqueda}
         onChangeText={setBusqueda}
-        placeholderTextColor="#999"
+        placeholderTextColor="#666666"
       />
 
       <View style={styles.pickerContainer}>
@@ -359,6 +359,7 @@ const styles = StyleSheet.create({
     padding: 12,
     marginBottom: 12,
     fontSize: 16,
+    color: '#000000',
   },
   pickerContainer: {
     backgroundColor: '#fff',

@@ -196,7 +196,7 @@ const UpdateTab = ({
           placeholder="Buscar por ID o nombre..."
           value={busqueda}
           onChangeText={setBusqueda}
-          placeholderTextColor="#999"
+          placeholderTextColor="#666666"
         />
         
         <TouchableOpacity style={styles.button} onPress={handleBuscar}>
@@ -210,6 +210,8 @@ const UpdateTab = ({
             <Text style={styles.label}>Nombre</Text>
             <TextInput
               style={styles.input}
+              placeholder="Nombre del producto"
+              placeholderTextColor="#666666"
               value={formData.nombre}
               onChangeText={(text) => setFormData(prev => ({ ...prev, nombre: text }))}
             />
@@ -217,6 +219,8 @@ const UpdateTab = ({
             <Text style={styles.label}>Precio</Text>
             <TextInput
               style={styles.input}
+              placeholder="Precio"
+              placeholderTextColor="#666666"
               value={formData.precio}
               onChangeText={(text) => setFormData(prev => ({ ...prev, precio: text }))}
               keyboardType="numeric"
@@ -225,6 +229,8 @@ const UpdateTab = ({
             <Text style={styles.label}>Cantidad</Text>
             <TextInput
               style={styles.input}
+              placeholder="Cantidad"
+              placeholderTextColor="#666666"
               value={formData.cantidad}
               onChangeText={(text) => setFormData(prev => ({ ...prev, cantidad: text }))}
               keyboardType="numeric"
@@ -260,7 +266,7 @@ const UpdateTab = ({
           placeholder="Buscar por ID, nombre o email..."
           value={busquedaProv}
           onChangeText={setBusquedaProv}
-          placeholderTextColor="#999"
+          placeholderTextColor="#666666"
         />
         
         <TouchableOpacity style={styles.button} onPress={handleBuscarProveedor}>
@@ -274,6 +280,8 @@ const UpdateTab = ({
             <Text style={styles.label}>Nombre</Text>
             <TextInput
               style={styles.input}
+              placeholder="Nombre del proveedor"
+              placeholderTextColor="#666666"
               value={formProvData.nombre}
               onChangeText={(text) => setFormProvData(prev => ({ ...prev, nombre: text }))}
             />
@@ -281,6 +289,8 @@ const UpdateTab = ({
             <Text style={styles.label}>Email</Text>
             <TextInput
               style={styles.input}
+              placeholder="Email"
+              placeholderTextColor="#666666"
               value={formProvData.email}
               onChangeText={(text) => setFormProvData(prev => ({ ...prev, email: text }))}
               keyboardType="email-address"
@@ -290,6 +300,8 @@ const UpdateTab = ({
             <Text style={styles.label}>Teléfono</Text>
             <TextInput
               style={styles.input}
+              placeholder="Teléfono"
+              placeholderTextColor="#666666"
               value={formProvData.telefono}
               onChangeText={(text) => setFormProvData(prev => ({ ...prev, telefono: text }))}
               keyboardType="phone-pad"
@@ -298,6 +310,8 @@ const UpdateTab = ({
             <Text style={styles.label}>Dirección</Text>
             <TextInput
               style={styles.input}
+              placeholder="Dirección"
+              placeholderTextColor="#666666"
               value={formProvData.direccion}
               onChangeText={(text) => setFormProvData(prev => ({ ...prev, direccion: text }))}
               multiline
@@ -335,6 +349,7 @@ const styles = StyleSheet.create({
     padding: 12,
     marginBottom: 12,
     fontSize: 16,
+    color: '#000000',
   },
   button: {
     backgroundColor: '#0F2C54',

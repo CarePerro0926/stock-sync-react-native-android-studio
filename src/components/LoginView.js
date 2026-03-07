@@ -132,6 +132,7 @@ const LoginView = ({ onLogin, onShowRegister, onShowCatalog }) => {
           <TextInput
             style={styles.input}
             placeholder="Correo o usuario"
+            placeholderTextColor="#666666"
             value={identifier}
             onChangeText={setIdentifier}
             autoCapitalize="none"
@@ -141,6 +142,7 @@ const LoginView = ({ onLogin, onShowRegister, onShowCatalog }) => {
           <TextInput
             style={styles.input}
             placeholder="Contraseña"
+            placeholderTextColor="#666666"
             value={password}
             onChangeText={setPassword}
             secureTextEntry
@@ -237,7 +239,8 @@ const styles = StyleSheet.create({
     padding: 14,
     marginBottom: 16,
     fontSize: 16,
-    backgroundColor: '#f8f9fa',
+    backgroundColor: '#ffffff',
+    color: '#000000',
   },
   buttonContainer: {
     flexDirection: 'row',

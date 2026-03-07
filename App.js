@@ -1,6 +1,6 @@
 // App.js
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, StatusBar, ImageBackground } from 'react-native';
+import { StyleSheet, View, StatusBar, ImageBackground, Text } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoginView from './src/components/LoginView';
 import RegisterView from './src/components/RegisterView';
@@ -14,7 +14,38 @@ import { initialProductos, initialProveedores, initialCategorias } from './src/d
 import { useRealtimeSync } from './src/hooks/useRealtimeSync';
 import logoFondo from './assets/logo-fondo.png';
 
-export default function App() {
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error('ErrorBoundary caught:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20, backgroundColor: '#fff' }}>
+          <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 10, color: '#d32f2f' }}>
+            Error en la aplicación
+          </Text>
+          <Text style={{ fontSize: 14, color: '#666', textAlign: 'center' }}>
+            {this.state.error?.toString() || 'Error desconocido'}
+          </Text>
+        </View>
+      );
+    }
+    return this.props.children;
+  }
+}
+
+function AppContent() {
   const [productos, setProductos] = useState([]);
   const [proveedores, setProveedores] = useState([]);
   const [categorias, setCategorias] = useState([]);
@@ -200,3 +231,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(244, 247, 250, 0.85)',
   },
 });
+
+export default function App() {
+  return (
+    <ErrorBoundary>
+      <AppContent />
+    </ErrorBoundary>
+  );
+}
+

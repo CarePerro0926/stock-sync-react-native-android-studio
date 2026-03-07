@@ -99,6 +99,7 @@ const RegisterView = ({ onShowLogin }) => {
           <TextInput
             style={styles.input}
             placeholder="Nombres"
+            placeholderTextColor="#666666"
             value={formData.nombres}
             onChangeText={(text) => handleChange('nombres', text)}
           />
@@ -106,6 +107,7 @@ const RegisterView = ({ onShowLogin }) => {
           <TextInput
             style={styles.input}
             placeholder="Apellidos"
+            placeholderTextColor="#666666"
             value={formData.apellidos}
             onChangeText={(text) => handleChange('apellidos', text)}
           />
@@ -113,6 +115,7 @@ const RegisterView = ({ onShowLogin }) => {
           <TextInput
             style={styles.input}
             placeholder="Cédula"
+            placeholderTextColor="#666666"
             value={formData.cedula}
             onChangeText={(text) => handleChange('cedula', text)}
             keyboardType="numeric"
@@ -121,6 +124,7 @@ const RegisterView = ({ onShowLogin }) => {
           <TextInput
             style={styles.input}
             placeholder="Fecha de Nacimiento (YYYY-MM-DD)"
+            placeholderTextColor="#666666"
             value={formData.fecha}
             onChangeText={(text) => handleChange('fecha', text)}
           />
@@ -128,6 +132,7 @@ const RegisterView = ({ onShowLogin }) => {
           <TextInput
             style={styles.input}
             placeholder="Teléfono (Ej: 3001234567)"
+            placeholderTextColor="#666666"
             value={formData.telefono}
             onChangeText={(text) => handleChange('telefono', text)}
             keyboardType="phone-pad"
@@ -136,6 +141,7 @@ const RegisterView = ({ onShowLogin }) => {
           <TextInput
             style={styles.input}
             placeholder="Correo Electrónico"
+            placeholderTextColor="#666666"
             value={formData.email}
             onChangeText={(text) => handleChange('email', text)}
             keyboardType="email-address"
@@ -145,6 +151,7 @@ const RegisterView = ({ onShowLogin }) => {
           <TextInput
             style={styles.input}
             placeholder="Nombre de Usuario"
+            placeholderTextColor="#666666"
             value={formData.user}
             onChangeText={(text) => handleChange('user', text)}
             autoCapitalize="none"
@@ -153,6 +160,7 @@ const RegisterView = ({ onShowLogin }) => {
           <TextInput
             style={styles.input}
             placeholder="Contraseña"
+            placeholderTextColor="#666666"
             value={formData.pass}
             onChangeText={(text) => handleChange('pass', text)}
             secureTextEntry
@@ -246,6 +254,8 @@ const styles = StyleSheet.create({
     padding: 12,
     marginBottom: 12,
     fontSize: 16,
+    backgroundColor: '#ffffff',
+    color: '#000000',
   },
   pickerContainer: {
     marginBottom: 12,

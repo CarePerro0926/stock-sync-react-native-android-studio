@@ -98,6 +98,7 @@ const PublicCatalogView = ({ productos = [], categorias = [], onBack }) => {
         <TextInput
           style={styles.searchInput}
           placeholder="Buscar producto..."
+          placeholderTextColor="#666666"
           value={textoBusqueda}
           onChangeText={setTextoBusqueda}
         />
@@ -190,6 +191,8 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 16,
     marginBottom: 10,
+    backgroundColor: '#ffffff',
+    color: '#000000',
   },
   backButton: {
     backgroundColor: '#6c757d',

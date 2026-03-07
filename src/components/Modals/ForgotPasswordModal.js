@@ -94,6 +94,7 @@ const ForgotPasswordModal = ({ visible, onClose }) => {
           <TextInput
             style={styles.input}
             placeholder="Usuario o email"
+            placeholderTextColor="#666666"
             value={userOrEmail}
             onChangeText={setUserOrEmail}
             autoCapitalize="none"

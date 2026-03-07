@@ -96,6 +96,7 @@ const ClientView = ({ productos, categorias, carrito, setCarrito, onLogout }) =>
             keyboardType="numeric"
             value={cantidadActual > 0 ? String(cantidadActual) : ''}
             placeholder="0"
+            placeholderTextColor="#666666"
             onChangeText={handleQuantityChange(p.id, p.precio)}
           />
         </View>
@@ -132,6 +133,7 @@ const ClientView = ({ productos, categorias, carrito, setCarrito, onLogout }) =>
         <TextInput
           style={styles.searchInput}
           placeholder="Buscar producto..."
+          placeholderTextColor="#666666"
           value={filtroTxt}
           onChangeText={setFiltroTxt}
         />
@@ -258,6 +260,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     backgroundColor: '#fff',
     elevation: 1,
+    color: '#000000',
   },
   listContent: {
     padding: 15,
@@ -312,6 +315,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     backgroundColor: '#f8f9fa',
+    color: '#000000',
   },
   cartContainer: {
     backgroundColor: '#fff',

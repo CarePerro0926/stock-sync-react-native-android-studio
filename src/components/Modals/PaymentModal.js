@@ -46,6 +46,7 @@ const PaymentModal = ({ visible, onClose, onConfirm }) => {
           <TextInput
             style={styles.input}
             placeholder="Número de tarjeta"
+            placeholderTextColor="#666666"
             value={cardNumber}
             onChangeText={setCardNumber}
             keyboardType="numeric"
@@ -55,6 +56,7 @@ const PaymentModal = ({ visible, onClose, onConfirm }) => {
           <TextInput
             style={styles.input}
             placeholder="Nombre en la tarjeta"
+            placeholderTextColor="#666666"
             value={cardName}
             onChangeText={setCardName}
           />
@@ -63,6 +65,7 @@ const PaymentModal = ({ visible, onClose, onConfirm }) => {
             <TextInput
               style={[styles.input, styles.halfInput]}
               placeholder="MM/AA"
+              placeholderTextColor="#666666"
               value={expiryDate}
               onChangeText={setExpiryDate}
               maxLength={5}
@@ -71,6 +74,7 @@ const PaymentModal = ({ visible, onClose, onConfirm }) => {
             <TextInput
               style={[styles.input, styles.halfInput]}
               placeholder="CVV"
+              placeholderTextColor="#666666"
               value={cvv}
               onChangeText={setCvv}
               keyboardType="numeric"
@@ -127,6 +131,8 @@ const styles = StyleSheet.create({
     padding: 12,
     marginBottom: 12,
     fontSize: 16,
+    backgroundColor: '#ffffff',
+    color: '#000000',
   },
   row: {
     flexDirection: 'row',

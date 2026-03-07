@@ -1,4 +1,0 @@
-@echo off
-cd /d "%~dp0"
-cmd /k compilar-apk.bat
-
