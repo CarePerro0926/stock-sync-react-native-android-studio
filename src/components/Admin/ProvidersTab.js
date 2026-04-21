@@ -13,14 +13,21 @@ const ProvidersTab = ({ proveedores = [] }) => {
   const [mostrarInactivos, setMostrarInactivos] = useState(false);
   const [filtroTxt, setFiltroTxt] = useState('');
 
+  const estaInactivo = (proveedor) => {
+    const v = proveedor?.deleted_at;
+    if (v === null || v === undefined) return false;
+    const t = String(v).trim().toLowerCase();
+    return t !== '' && t !== 'null';
+  };
+
   const proveedoresFiltrados = useMemo(() => {
     let list = [...(proveedores || [])];
 
     // Filtrar por estado (activo/inactivo)
     if (mostrarInactivos) {
-      list = list.filter(p => p.deleted_at !== null && p.deleted_at !== undefined);
+      list = list.filter(p => estaInactivo(p));
     } else {
-      list = list.filter(p => !p.deleted_at);
+      list = list.filter(p => !estaInactivo(p));
     }
 
     // Filtrar por texto

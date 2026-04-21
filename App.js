@@ -79,21 +79,32 @@ function AppContent() {
   // Cargar datos iniciales
   useEffect(() => {
     const cargarDatos = async () => {
-      try {
-        const [productosDB, proveedoresDB, categoriasDB] = await Promise.all([
-          productService.getAll(),
-          providerService.getAll(),
-          categoryService.getAll()
-        ]);
+      const [productosRes, proveedoresRes, categoriasRes] = await Promise.allSettled([
+        productService.getAll(),
+        providerService.getAll(),
+        categoryService.getAll(),
+      ]);
 
-        setProductos(productosDB.length > 0 ? productosDB : initialProductos);
-        setProveedores(proveedoresDB.length > 0 ? proveedoresDB : initialProveedores);
-        setCategorias(categoriasDB.length > 0 ? categoriasDB : initialCategorias);
-      } catch (error) {
-        console.error('Error al cargar datos:', error);
-        setProductos(initialProductos);
-        setProveedores(initialProveedores);
-        setCategorias(initialCategorias);
+      if (productosRes.status === 'fulfilled') {
+        console.log(`Catálogo cargado desde Supabase: ${productosRes.value?.length || 0} productos`);
+        setProductos(productosRes.value || []);
+      } else {
+        console.error('Error al cargar productos desde Supabase:', productosRes.reason);
+        setProductos([]);
+      }
+
+      if (proveedoresRes.status === 'fulfilled') {
+        setProveedores(proveedoresRes.value || []);
+      } else {
+        console.error('Error al cargar proveedores:', proveedoresRes.reason);
+        setProveedores([]);
+      }
+
+      if (categoriasRes.status === 'fulfilled') {
+        setCategorias(categoriasRes.value || []);
+      } else {
+        console.error('Error al cargar categorias:', categoriasRes.reason);
+        setCategorias([]);
       }
     };
     cargarDatos();

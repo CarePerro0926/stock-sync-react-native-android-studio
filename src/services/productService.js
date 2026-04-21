@@ -3,22 +3,17 @@ import { supabase } from './supabaseClient';
 
 export const productService = {
   getAll: async () => {
-    try {
-      const { data, error } = await supabase
-        .from('vista_productos_con_categoria')
-        .select('*')
-        .order('nombre', { ascending: true });
+    const { data, error } = await supabase
+      .from('productos')
+      .select('id,nombre,precio,cantidad,categoria_id')
+      .order('nombre', { ascending: true });
 
-      if (error) {
-        console.error("Error en productService.getAll:", error);
-        throw error;
-      }
-
-      return data || [];
-    } catch (error) {
-      console.error("Error fetching products:", error);
-      return [];
+    if (error) {
+      console.error('Error en productService.getAll:', error);
+      throw error;
     }
+
+    return data || [];
   },
 
   create: async (producto) => {

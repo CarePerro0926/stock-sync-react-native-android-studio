@@ -18,6 +18,7 @@ import ConfirmationModal from './Modals/ConfirmationModal';
 const ClientView = ({ productos, categorias, carrito, setCarrito, onLogout }) => {
   const [filtroCat, setFiltroCat] = useState('Todas');
   const [filtroTxt, setFiltroTxt] = useState('');
+  const normalizar = (valor) => String(valor ?? '').trim().toLowerCase();
 
   const cats = useMemo(() => {
     return Array.isArray(categorias) ? categorias : [];
@@ -26,10 +27,10 @@ const ClientView = ({ productos, categorias, carrito, setCarrito, onLogout }) =>
   const productosConNombreCategoria = useMemo(() => {
     return productos.map(p => {
       if (p.categoria_nombre) return p;
-      const categoria = cats.find(c => c.id === p.categoria_id);
-      return { 
+      const categoria = cats.find(c => String(c.id) === String(p.categoria_id));
+      return {
         ...p, 
-        categoria_nombre: categoria ? categoria.nombre : 'Sin Categoría'
+        categoria_nombre: categoria ? categoria.nombre : (p.categoria || 'Sin Categoría')
       };
     });
   }, [productos, cats]);
@@ -47,13 +48,17 @@ const ClientView = ({ productos, categorias, carrito, setCarrito, onLogout }) =>
   const total = carrito.reduce((sum, item) => sum + item.precio, 0);
 
   const categoriasFiltro = useMemo(() => {
-    const nombres = cats.map(c => c.nombre).filter(Boolean);
-    return ['Todas', ...nombres];
-  }, [cats]);
+    const nombresDesdeCategorias = cats.map(c => c?.nombre).filter(Boolean);
+    const nombresDesdeProductos = productosConNombreCategoria.map(p => p?.categoria_nombre).filter(Boolean);
+    const unicas = [...new Set([...nombresDesdeCategorias, ...nombresDesdeProductos])];
+    return ['Todas', ...unicas];
+  }, [cats, productosConNombreCategoria]);
 
   const productosFiltrados = useMemo(() => {
     return productosConNombreCategoria.filter(p => {
-      const coincideCat = filtroCat === 'Todas' || p.categoria_nombre === filtroCat;
+      const coincideCat =
+        filtroCat === 'Todas' ||
+        normalizar(p.categoria_nombre) === normalizar(filtroCat);
       const coincideTxt = !filtroTxt || p.nombre.toLowerCase().includes(filtroTxt.toLowerCase());
       return coincideCat && coincideTxt;
     });
@@ -122,9 +127,11 @@ const ClientView = ({ productos, categorias, carrito, setCarrito, onLogout }) =>
               selectedValue={filtroCat}
               onValueChange={(value) => setFiltroCat(value)}
               style={styles.picker}
+              dropdownIconColor="#243446"
+              itemStyle={styles.pickerItem}
             >
               {categoriasFiltro.map((cat, idx) => (
-                <Picker.Item key={idx} label={cat} value={cat} />
+                <Picker.Item key={idx} label={cat} value={cat} color="#243446" />
               ))}
             </Picker>
           </View>
@@ -251,6 +258,11 @@ const styles = StyleSheet.create({
   },
   picker: {
     backgroundColor: '#fff',
+    height: 50,
+    color: '#243446',
+  },
+  pickerItem: {
+    color: '#243446',
   },
   searchInput: {
     borderWidth: 1,

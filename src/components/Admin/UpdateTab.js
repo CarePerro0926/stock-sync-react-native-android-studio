@@ -1,5 +1,5 @@
 // src/components/Admin/UpdateTab.js
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   View,
   Text,
@@ -37,6 +37,34 @@ const UpdateTab = ({
     telefono: '',
     direccion: ''
   });
+
+  const normalizar = (valor) => String(valor || '').trim().toLowerCase();
+
+  const proveedoresSugeridos = useMemo(() => {
+    const entrada = normalizar(busquedaProv);
+    if (!entrada) return [];
+
+    return proveedores
+      .filter((pr) => {
+        const id = normalizar(pr.id);
+        const nombre = normalizar(pr.nombre);
+        const email = normalizar(pr.email);
+        return id.includes(entrada) || nombre.includes(entrada) || email.includes(entrada);
+      })
+      .slice(0, 8);
+  }, [busquedaProv, proveedores]);
+
+  const seleccionarProveedor = (encontrado) => {
+    if (!encontrado) return;
+    setProveedor(encontrado);
+    setBusquedaProv(String(encontrado.nombre || encontrado.id || ''));
+    setFormProvData({
+      nombre: encontrado.nombre || '',
+      email: encontrado.email || '',
+      telefono: encontrado.telefono || '',
+      direccion: encontrado.direccion || ''
+    });
+  };
 
   // Buscar producto
   const handleBuscar = () => {
@@ -87,15 +115,23 @@ const UpdateTab = ({
     }
 
     try {
+      const rawId = producto.id;
+      const idAsNumber = Number(rawId);
+      const id = Number.isNaN(idAsNumber) ? String(rawId).trim() : idAsNumber;
+      const payload = {
+        nombre: formData.nombre.trim(),
+        precio,
+        cantidad,
+        categoria_id: formData.categoria && String(formData.categoria).trim().length > 0
+          ? String(formData.categoria).trim()
+          : null
+      };
+
       const { error } = await supabase
         .from('productos')
-        .update({
-          nombre: formData.nombre.trim(),
-          precio,
-          cantidad,
-          categoria_id: formData.categoria || null
-        })
-        .eq('id', producto.id);
+        .update(payload)
+        .eq('id', id)
+        .select('id');
 
       if (error) {
         Alert.alert('Error', 'Error al actualizar el producto: ' + error.message);
@@ -118,19 +154,18 @@ const UpdateTab = ({
 
   // Buscar proveedor
   const handleBuscarProveedor = () => {
-    const entrada = (busquedaProv || '').trim().toLowerCase();
+    const entrada = normalizar(busquedaProv);
     if (!entrada) {
       Alert.alert('Error', 'Ingresa un ID, nombre o email para buscar');
       return;
     }
 
-    let encontrado = proveedores.find(pr => String(pr.id).toLowerCase() === entrada);
-    if (!encontrado) {
-      encontrado = proveedores.find(pr => (pr.nombre || '').toLowerCase().includes(entrada));
-    }
-    if (!encontrado) {
-      encontrado = proveedores.find(pr => (pr.email || '').toLowerCase().includes(entrada));
-    }
+    const encontrado = proveedores.find((pr) => {
+      const id = normalizar(pr.id);
+      const nombre = normalizar(pr.nombre);
+      const email = normalizar(pr.email);
+      return id.includes(entrada) || nombre.includes(entrada) || email.includes(entrada);
+    });
 
     if (!encontrado) {
       Alert.alert('No encontrado', 'Proveedor no encontrado');
@@ -139,13 +174,7 @@ const UpdateTab = ({
       return;
     }
 
-    setProveedor(encontrado);
-    setFormProvData({
-      nombre: encontrado.nombre || '',
-      email: encontrado.email || '',
-      telefono: encontrado.telefono || '',
-      direccion: encontrado.direccion || ''
-    });
+    seleccionarProveedor(encontrado);
   };
 
   // Actualizar proveedor
@@ -242,6 +271,8 @@ const UpdateTab = ({
                 selectedValue={formData.categoria}
                 onValueChange={(value) => setFormData(prev => ({ ...prev, categoria: value }))}
                 style={styles.picker}
+                dropdownIconColor="#243446"
+                itemStyle={styles.pickerItem}
               >
                 <Picker.Item label="Sin categoría" value="" />
                 {categorias.map(c => (
@@ -265,10 +296,31 @@ const UpdateTab = ({
           style={styles.input}
           placeholder="Buscar por ID, nombre o email..."
           value={busquedaProv}
-          onChangeText={setBusquedaProv}
+          onChangeText={(text) => {
+            setBusquedaProv(text);
+            if (!text.trim()) {
+              setProveedor(null);
+              setFormProvData({ nombre: '', email: '', telefono: '', direccion: '' });
+            }
+          }}
           placeholderTextColor="#666666"
         />
-        
+
+        {busquedaProv.trim() !== '' && proveedoresSugeridos.length > 0 && (
+          <View style={styles.sugerenciasContainer}>
+            {proveedoresSugeridos.map((pr) => (
+              <TouchableOpacity
+                key={String(pr.id)}
+                style={styles.sugerenciaItem}
+                onPress={() => seleccionarProveedor(pr)}
+              >
+                <Text style={styles.sugerenciaNombre}>{pr.nombre || 'Sin nombre'}</Text>
+                <Text style={styles.sugerenciaMeta}>ID: {pr.id} | {pr.email || 'sin email'}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
+
         <TouchableOpacity style={styles.button} onPress={handleBuscarProveedor}>
           <Text style={styles.buttonText}>Buscar Proveedor</Text>
         </TouchableOpacity>
@@ -397,6 +449,34 @@ const styles = StyleSheet.create({
   },
   picker: {
     height: 50,
+    color: '#243446',
+  },
+  pickerItem: {
+    color: '#243446',
+  },
+  sugerenciasContainer: {
+    backgroundColor: '#ffffff',
+    borderWidth: 1,
+    borderColor: '#ced4da',
+    borderRadius: 8,
+    marginBottom: 12,
+    overflow: 'hidden',
+  },
+  sugerenciaItem: {
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e9ecef',
+  },
+  sugerenciaNombre: {
+    fontSize: 15,
+    color: '#243446',
+    fontWeight: '600',
+  },
+  sugerenciaMeta: {
+    fontSize: 12,
+    color: '#6c757d',
+    marginTop: 2,
   },
 });
 

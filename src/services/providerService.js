@@ -5,30 +5,11 @@ export const providerService = {
   getAll: async () => {
     const { data, error } = await supabase
       .from('proveedores')
-      .select('id,nombre,email,telefono')
+      .select('*')
       .order('nombre', { ascending: true });
 
     if (error) throw error;
-
-    const proveedores = data || [];
-
-    const proveedoresConCategorias = await Promise.all(
-      proveedores.map(async (prov) => {
-        const { data: cats, error: catsErr } = await supabase
-          .from('proveedor_categorias')
-          .select('categoria_id')
-          .eq('proveedor_id', prov.id);
-
-        if (catsErr) throw catsErr;
-
-        return {
-          ...prov,
-          categorias: (cats || []).map(c => c.categoria_id)
-        };
-      })
-    );
-
-    return proveedoresConCategorias;
+    return data || [];
   },
 
   create: async (proveedor) => {

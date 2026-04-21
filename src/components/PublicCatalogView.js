@@ -86,9 +86,11 @@ const PublicCatalogView = ({ productos = [], categorias = [], onBack }) => {
               selectedValue={categoriaSeleccionada || 'Todas'}
               onValueChange={(value) => setCategoriaSeleccionada(value === 'Todas' ? '' : value)}
               style={styles.picker}
+              dropdownIconColor="#000000"
+              itemStyle={styles.pickerItem}
             >
               {categoriasFiltro.map((cat, idx) => (
-                <Picker.Item key={idx} label={cat} value={cat} />
+                <Picker.Item key={idx} label={cat} value={cat} color="#ffffff" />
               ))}
             </Picker>
           </View>
@@ -183,6 +185,11 @@ const styles = StyleSheet.create({
   },
   picker: {
     height: 50,
+    color: '#000000',
+    backgroundColor: '#ffffff',
+  },
+  pickerItem: {
+    color: '#ffffff',
   },
   searchInput: {
     borderWidth: 1,

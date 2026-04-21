@@ -31,9 +31,10 @@
       ]
     },
     "plugins": [],
+    "owner": "stock-sync",
     "extra": {
       "eas": {
-        "projectId": "12e08dde-5f95-4c4e-8d8b-10b78b6e81a4"
+        "projectId": "41910597-3f3f-48c2-801e-8eaf2cf0b2b1"
       }
     }
   }

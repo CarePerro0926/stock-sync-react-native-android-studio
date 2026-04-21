@@ -12,28 +12,44 @@ import { Picker } from '@react-native-picker/picker';
 const InventoryTab = ({ productos = [], categorias = [] }) => {
   const [filtroCat, setFiltroCat] = useState('Todas');
   const [filtroTxt, setFiltroTxt] = useState('');
+  const normalizar = (valor) => String(valor ?? '').trim().toLowerCase();
+
+  const cats = useMemo(() => (Array.isArray(categorias) ? categorias : []), [categorias]);
+
+  const productosConNombreCategoria = useMemo(() => {
+    return (productos || []).map((p) => {
+      if (p?.categoria_nombre) return p;
+      const categoria = cats.find((c) => String(c.id) === String(p.categoria_id));
+      return {
+        ...p,
+        categoria_nombre: categoria?.nombre || p?.categoria || 'Sin Categoría',
+      };
+    });
+  }, [productos, cats]);
 
   const listaCategoriasFiltro = useMemo(() => {
-    const nombresDesdeProductos = (productos || [])
-      .map(p => p?.categoria_nombre ?? p?.categoria ?? '')
+    const nombresDesdeProductos = (productosConNombreCategoria || [])
+      .map(p => p?.categoria_nombre ?? '')
       .filter(nombre => nombre && String(nombre).trim() !== '');
-    const nombresDesdeProp = (categorias || [])
+    const nombresDesdeProp = (cats || [])
       .map(c => c?.nombre ?? '')
       .filter(nombre => nombre && String(nombre).trim() !== '');
     const combined = [...nombresDesdeProductos, ...nombresDesdeProp];
     const unicas = [...new Set(combined.map(nombre => String(nombre).trim()))];
     return ['Todas', ...unicas];
-  }, [productos, categorias]);
+  }, [productosConNombreCategoria, cats]);
 
   const productosFiltrados = useMemo(() => {
-    return productos.filter(p => {
-      const coincideCat = filtroCat === 'Todas' || p.categoria_nombre === filtroCat || p.categoria === filtroCat;
-      const coincideTxt = !filtroTxt || 
+    return productosConNombreCategoria.filter(p => {
+      const coincideCat =
+        filtroCat === 'Todas' ||
+        normalizar(p.categoria_nombre) === normalizar(filtroCat);
+      const coincideTxt = !filtroTxt ||
         (p.nombre && p.nombre.toLowerCase().includes(filtroTxt.toLowerCase())) ||
         (p.id && String(p.id).toLowerCase().includes(filtroTxt.toLowerCase()));
       return coincideCat && coincideTxt;
     });
-  }, [productos, filtroCat, filtroTxt]);
+  }, [productosConNombreCategoria, filtroCat, filtroTxt]);
 
   const renderProducto = ({ item: p }) => (
     <View style={styles.productCard}>
@@ -62,9 +78,11 @@ const InventoryTab = ({ productos = [], categorias = [] }) => {
               selectedValue={filtroCat}
               onValueChange={(value) => setFiltroCat(value)}
               style={styles.picker}
+              dropdownIconColor="#243446"
+              itemStyle={styles.pickerItem}
             >
               {listaCategoriasFiltro.map((cat, idx) => (
-                <Picker.Item key={idx} label={cat} value={cat} />
+                <Picker.Item key={idx} label={cat} value={cat} color="#FFFFFF" />
               ))}
             </Picker>
           </View>
@@ -139,6 +157,10 @@ const styles = StyleSheet.create({
   },
   picker: {
     height: 50,
+    color: '#243446',
+  },
+  pickerItem: {
+    color: '#243446',
   },
   searchInput: {
     borderWidth: 1,
